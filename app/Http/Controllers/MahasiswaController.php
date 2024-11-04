@@ -37,24 +37,18 @@ class MahasiswaController extends Controller
 
     public function destroy($id)
     {
-        // Cek apakah pengguna memiliki peran admin
+        //hanya admin yang bisa mengahpus
         if (Auth::user()->role !== 'admin') {
             return response()->json([
                 'message' => 'Akses ditolak. Hanya admin yang dapat menghapus data.'
             ], 403);
         }
-
-        // Menghapus data mahasiswa
-        Mahasiswa::destroy($id);  
-        return response()->json(['message' => 'Data berhasil dihapus']);
-
-
-        //Mengupdate data mahasiswa
-        $mahasiswa->update($request->all());
+        $mahasiswa = Mahasiswa::findOrFail($id);
+        $mahasiswa->delete();
 
         return response()->json([
-            'message' => 'Data mahasiswa berhasil diupdate',
-            'data' => $mahasiswa
-        ], 200);
+            'message' => 'Data deleted successfully'
+        ]);
     }
+     
 }
